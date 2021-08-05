@@ -9,6 +9,7 @@ import 'package:task_calendar/calendar.dart';
 import 'package:path_provider/path_provider.dart' as pathProvider;
 import 'package:task_calendar/model/task.dart';
 import 'package:task_calendar/model_service/services_model.dart';
+import 'package:task_calendar/widgets/task_list.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

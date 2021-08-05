@@ -6,6 +6,8 @@ import 'package:nepali_utils/nepali_utils.dart';
 import 'package:provider/provider.dart';
 import 'package:task_calendar/model/task.dart';
 import 'package:task_calendar/model_service/services_model.dart';
+import 'package:task_calendar/widgets/add_event_card.dart';
+import 'package:task_calendar/widgets/task_list.dart';
 
 /// Calendar Picker Example
 class CalendarDatePickerWidget extends StatefulWidget {
@@ -57,7 +59,7 @@ class _CalendarDatePickerWidgetState extends State<CalendarDatePickerWidget> {
       appBar: AppBar(),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          showDialog(
+          /*  showDialog(
               context: context,
               builder: (context) {
                 return Dialog(
@@ -179,6 +181,12 @@ class _CalendarDatePickerWidgetState extends State<CalendarDatePickerWidget> {
                   ),
                 );
               });
+         */
+
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (BuildContext context) => AddEventCard()));
         },
         child: const Text(
           'Add',
@@ -187,12 +195,17 @@ class _CalendarDatePickerWidgetState extends State<CalendarDatePickerWidget> {
       ),
       body: SingleChildScrollView(
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             CalendarDatePicker(
               initialDate: NepaliDateTime.now(),
               firstDate: NepaliDateTime(2070),
               lastDate: NepaliDateTime(2090),
-              onDateChanged: (date) => _selectedDate.value = date,
+              onDateChanged: (date) {
+                _selectedDate.value = date;
+                setState(() {});
+              },
+              onDisplayedMonthChanged: (nepaliDate) {},
               initialCalendarMode: DatePickerMode.day,
               dayBuilder: (dayToBuild) {
                 Color color = Colors.black;
@@ -223,15 +236,6 @@ class _CalendarDatePickerWidgetState extends State<CalendarDatePickerWidget> {
                     if (provider.getListTask.any((event) => _dayEquals(
                         NepaliDateTime.tryParse(event.startDate.toString()),
                         dayToBuild)))
-                      /* Align(
-                        alignment: Alignment.bottomCenter,
-                        child: Container(
-                          width: 6,
-                          height: 6,
-                          decoration: const BoxDecoration(
-                              shape: BoxShape.circle, color: Colors.purple),
-                        ),
-                      ), */
                       Positioned(
                         bottom: 0,
                         right: 0,
@@ -266,12 +270,18 @@ class _CalendarDatePickerWidgetState extends State<CalendarDatePickerWidget> {
                 borderRadius: BorderRadius.circular(8.0),
               ),
             ),
-            const Text(
-              'Tasks',
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
+            const Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: 16,
+                vertical: 8.0,
+              ),
+              child: Text(
+                'Schedule',
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
             ValueListenableBuilder<NepaliDateTime>(
@@ -300,31 +310,8 @@ class _CalendarDatePickerWidgetState extends State<CalendarDatePickerWidget> {
                   itemCount: event.length,
                   shrinkWrap: true,
                   physics: const ClampingScrollPhysics(),
-                  itemBuilder: (context, index) => ListTile(
-                    title: Text(
-                      event![index].title,
-                      style: const TextStyle(
-                        fontSize: 14,
-                        color: Colors.black,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    subtitle: Text(
-                      event[index].description,
-                      style: const TextStyle(
-                        color: Colors.grey,
-                        fontSize: 12,
-                      ),
-                    ),
-                    trailing: Text(
-                      NepaliDateFormat.yMMMMEEEEd().format(NepaliDateTime.parse(
-                          event[index].startDate.toString())),
-                      style: TextStyle(
-                        color: Colors.red,
-                      ),
-                    ),
-                    onTap: () {},
-                  ),
+                  itemBuilder: (context, index) =>
+                      TaskList(title: event![index].title, time: '20:20'),
                   separatorBuilder: (context, _) => const Divider(),
                 );
               },

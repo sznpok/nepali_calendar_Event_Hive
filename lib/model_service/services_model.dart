@@ -18,7 +18,7 @@ class ServiceModel with ChangeNotifier {
   getTask() async {
     final box = Hive.box<Task>(hiveBox);
     _listTask = box.values.toList();
-    notifyListeners();
+    // notifyListeners();
     print("all data fetched");
   }
 
